@@ -1,0 +1,14 @@
+/.idea/**
+!/.idea/codeStyles/
+!/.idea/codeStyles/**
+!/.idea/inspectionProfiles/
+!/.idea/inspectionProfiles/**
+!/.idea/runConfigurations/
+!/.idea/runConfigurations/**
+!/.idea/gradle.xml
+!/.idea/saveactions_settings.xml
+/example/data/example.pdf
+.DS_Store
+.gradle
+build
+out

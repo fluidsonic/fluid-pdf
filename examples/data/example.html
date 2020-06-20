@@ -1,0 +1,226 @@
+<html>
+<head>
+	<style>
+	  @page {
+		  /* This would override margins specified in the PdfGenerationSettings */
+		  /* margin: 20mm 20mm 10mm 20mm; */
+		  size: A4;
+	  }
+
+	  body {
+		  color:       #000;
+		  font-family: sans-serif;
+		  font-size:   13px;
+		  line-height: 160%;
+		  margin:      0;
+		  padding:     0;
+		  position:    relative;
+	  }
+
+	  table {
+		  border-spacing: 0;
+		  font-size:      inherit;
+		  line-height:    inherit;
+	  }
+
+	  .header {
+		  display:  flex;
+		  left:     0;
+		  position: fixed;
+		  right:    0;
+		  top:      0;
+		  z-index:  1;
+	  }
+
+	  .header, .headerSpacing {
+		  height: 108px;
+	  }
+
+	  .headerContent {
+		  flex-grow: 1;
+		  font-size: 18px;
+	  }
+
+	  .cute {
+		  height: 80px;
+	  }
+
+	  .footer {
+		  color:           #999;
+		  bottom:          0;
+		  display:         flex;
+		  justify-content: center;
+		  left:            0;
+		  line-height:     110%;
+		  padding:         48px 0 0 0;
+		  position:        fixed;
+		  right:           0;
+		  z-index:         1;
+	  }
+
+	  .footerSpacing {
+		  height: 64px;
+	  }
+
+	  .layoutTable {
+		  border: 0 none;
+		  width:  100%;
+	  }
+
+	  .layoutTable > * > tr > td {
+		  padding: 0;
+	  }
+
+	  .layoutTable > tbody > tr > td {
+		  padding: 0;
+	  }
+
+	  h1 {
+		  font-size:   26px;
+		  font-weight: bold;
+		  line-height: 100%;
+		  margin:      0;
+		  padding:     80px 0 0 0;
+	  }
+
+	  h2 {
+		  border-bottom: 3px solid #000;
+		  font-size:     20px;
+		  margin:        48px 0 16px 0;
+		  padding:       0 0 8px 0;
+	  }
+
+	  .topSecret {
+		  border:        4px solid #A00;
+		  border-radius: 12px;
+		  color:         #A00;
+		  font-size:     15px;
+		  font-weight:   bold;
+		  padding:       6px 20px;
+		  position:      absolute;
+		  transform:     translate(37px, -12px) rotate(-9deg);
+	  }
+
+	  .on-new-page {
+		  page-break-before: always;
+	  }
+
+	  @media screen {
+		  html {
+			  background: #333;
+		  }
+
+		  body {
+			  background: #FFF;
+			  margin:     10mm auto;
+			  min-height: 297mm;
+			  padding:    20mm 20mm 10mm 20mm;
+			  width:      calc(210mm - 40mm);
+		  }
+
+		  .header {
+			  background: #FFF;
+			  margin:     0 auto;
+			  position:   static;
+		  }
+
+		  .footer {
+			  background: #FFF;
+			  position:   static;
+		  }
+
+		  .headerSpacing, .footerSpacing {
+			  display: none;
+		  }
+	  }
+	</style>
+</head>
+<body>
+	<header class="header">
+		<div class="headerContent">
+			Top Secret Document - do not share!
+		</div>
+		<img class="cute" src="example.svg"/>
+	</header>
+	<table class="layoutTable">
+		<thead>
+		<tr>
+			<td>
+				<div class="headerSpacing"></div>
+			</td>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td>
+				<h1>
+					Special Document
+					<span class="topSecret">TOP SECRET</span>
+				</h1>
+
+				<h2>Heading 1</h2>
+				<p>
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tincidunt ultrices sodales. Mauris consequat malesuada sollicitudin. Mauris vehicula
+					ultrices dolor ut gravida. Praesent a hendrerit eros, eget dictum dolor. Aenean ut dolor augue. Donec lacinia porttitor sapien, sed congue enim
+					venenatis vel. Phasellus sed nisi cursus, volutpat orci sit amet, commodo magna. Nunc sagittis, ipsum ut aliquet dapibus, nulla libero vehicula eros,
+					ac pellentesque diam risus sit amet nibh. Integer porttitor ultrices diam, id faucibus magna rhoncus at. Ut mollis lobortis nunc in tincidunt. Aenean
+					vel orci maximus quam ornare iaculis. Maecenas sit amet est cursus, blandit urna eget, accumsan enim. Quisque tincidunt facilisis scelerisque.
+					Pellentesque euismod pharetra lorem non finibus. Fusce quis nibh nisi. Vestibulum id imperdiet orci, vel pretium quam.
+				</p>
+				<p>
+					Suspendisse rhoncus ante libero, quis sodales turpis posuere sollicitudin. Nullam molestie massa a nunc laoreet consequat. Morbi et sapien laoreet,
+					congue ipsum id, dapibus est. Duis ut nulla non sem pretium varius. Vestibulum tristique at purus nec rhoncus. Praesent quis ligula eu diam pulvinar
+					laoreet. Vestibulum eget sodales ante. Aliquam eget malesuada erat, in blandit urna. Mauris sit amet sagittis felis. Aenean tincidunt tortor quis
+					tortor porttitor tincidunt. Morbi sit amet mauris mauris. Suspendisse sit amet eros non orci eleifend consectetur. Etiam vulputate porttitor ipsum.
+				</p>
+
+				<h2>Heading 2</h2>
+				<p>
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tincidunt ultrices sodales. Mauris consequat malesuada sollicitudin. Mauris vehicula
+					ultrices dolor ut gravida. Praesent a hendrerit eros, eget dictum dolor. Aenean ut dolor augue. Donec lacinia porttitor sapien, sed congue enim
+					venenatis vel. Phasellus sed nisi cursus, volutpat orci sit amet, commodo magna. Nunc sagittis, ipsum ut aliquet dapibus, nulla libero vehicula eros,
+					ac pellentesque diam risus sit amet nibh. Integer porttitor ultrices diam, id faucibus magna rhoncus at. Ut mollis lobortis nunc in tincidunt. Aenean
+					vel orci maximus quam ornare iaculis. Maecenas sit amet est cursus, blandit urna eget, accumsan enim. Quisque tincidunt facilisis scelerisque.
+					Pellentesque euismod pharetra lorem non finibus. Fusce quis nibh nisi. Vestibulum id imperdiet orci, vel pretium quam.
+				</p>
+				<p>
+					Suspendisse rhoncus ante libero, quis sodales turpis posuere sollicitudin. Nullam molestie massa a nunc laoreet consequat. Morbi et sapien laoreet,
+					congue ipsum id, dapibus est. Duis ut nulla non sem pretium varius. Vestibulum tristique at purus nec rhoncus. Praesent quis ligula eu diam pulvinar
+					laoreet. Vestibulum eget sodales ante. Aliquam eget malesuada erat, in blandit urna. Mauris sit amet sagittis felis. Aenean tincidunt tortor quis
+					tortor porttitor tincidunt. Morbi sit amet mauris mauris. Suspendisse sit amet eros non orci eleifend consectetur. Etiam vulputate porttitor ipsum.
+				</p>
+
+				<h2>Heading 3</h2>
+				<p>
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tincidunt ultrices sodales. Mauris consequat malesuada sollicitudin. Mauris vehicula
+					ultrices dolor ut gravida. Praesent a hendrerit eros, eget dictum dolor. Aenean ut dolor augue. Donec lacinia porttitor sapien, sed congue enim
+					venenatis vel. Phasellus sed nisi cursus, volutpat orci sit amet, commodo magna. Nunc sagittis, ipsum ut aliquet dapibus, nulla libero vehicula eros,
+					ac pellentesque diam risus sit amet nibh. Integer porttitor ultrices diam, id faucibus magna rhoncus at. Ut mollis lobortis nunc in tincidunt. Aenean
+					vel orci maximus quam ornare iaculis. Maecenas sit amet est cursus, blandit urna eget, accumsan enim. Quisque tincidunt facilisis scelerisque.
+					Pellentesque euismod pharetra lorem non finibus. Fusce quis nibh nisi. Vestibulum id imperdiet orci, vel pretium quam.
+				</p>
+				<p>
+					Suspendisse rhoncus ante libero, quis sodales turpis posuere sollicitudin. Nullam molestie massa a nunc laoreet consequat. Morbi et sapien laoreet,
+					congue ipsum id, dapibus est. Duis ut nulla non sem pretium varius. Vestibulum tristique at purus nec rhoncus. Praesent quis ligula eu diam pulvinar
+					laoreet. Vestibulum eget sodales ante. Aliquam eget malesuada erat, in blandit urna. Mauris sit amet sagittis felis. Aenean tincidunt tortor quis
+					tortor porttitor tincidunt. Morbi sit amet mauris mauris. Suspendisse sit amet eros non orci eleifend consectetur. Etiam vulputate porttitor ipsum.
+				</p>
+
+				<div class="on-new-page">
+					<h2>Heading 4</h2>
+					<p>This will always start on a new page.</p>
+				</div>
+			</td>
+		</tr>
+		</tbody>
+		<tfoot>
+		<tr>
+			<td>
+				<div class="footerSpacing"></div>
+			</td>
+		</tr>
+		</tfoot>
+	</table>
+	<footer class="footer">Top secret document #42</footer>
+</body>
+</html>
