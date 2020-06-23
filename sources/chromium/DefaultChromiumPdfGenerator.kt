@@ -6,6 +6,7 @@ import com.github.kklisura.cdt.services.*
 import kotlinx.coroutines.*
 import java.nio.file.*
 import java.util.*
+import kotlin.coroutines.*
 
 
 internal class DefaultChromiumPdfGenerator constructor(
@@ -90,6 +91,12 @@ internal class DefaultChromiumPdfGenerator constructor(
 					val page = devToolsService.page
 					page.enable()
 					page.navigate(sourceFile.toUri().toString())
+
+					suspendCancellableCoroutine<Unit> { continuation ->
+						val listener = page.onLoadEventFired { continuation.resume(Unit) }
+
+						continuation.invokeOnCancellation { listener.unsubscribe() }
+					}
 
 					page.printToPDF(
 						when (settings.pageOrientation) {
