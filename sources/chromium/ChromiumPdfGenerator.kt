@@ -23,20 +23,19 @@ interface ChromiumPdfGenerator : PdfGenerator, Closeable {
 		suspend fun launch(
 			binaryFile: Path,
 			configure: ConfigurationBuilder.() -> Unit = {}
-		): ChromiumPdfGenerator = withContext(Dispatchers.Default) {
-			checkBinaryFile(binaryFile)
-
+		): ChromiumPdfGenerator =
 			launch(
 				binaryFile = binaryFile,
 				configuration = ConfigurationBuilder().apply(configure).build()
 			)
-		}
 
 
 		internal suspend fun launch(
 			binaryFile: Path,
 			configuration: ChromeLauncherConfiguration
 		): ChromiumPdfGenerator = withContext(Dispatchers.Default) {
+			checkBinaryFile(binaryFile)
+
 			val launcher = ChromeLauncher(
 				ProcessLauncherImpl(),
 				DefaultChromiumEnvironment,
@@ -59,17 +58,14 @@ interface ChromiumPdfGenerator : PdfGenerator, Closeable {
 		}
 
 
-		suspend fun lazy(
+		fun lazy(
 			binaryFile: Path,
 			configure: ConfigurationBuilder.() -> Unit = {}
-		): LazyChromiumPdfGenerator = withContext(Dispatchers.IO) {
-			checkBinaryFile(binaryFile)
-
+		): LazyChromiumPdfGenerator =
 			DefaultLazyChromiumPdfGenerator(
 				binaryFile = binaryFile,
 				configuration = ConfigurationBuilder().apply(configure).build()
 			)
-		}
 	}
 
 
