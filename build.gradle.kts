@@ -13,4 +13,5 @@ fluidJvmLibraryVariant(JvmTarget.jdk8) {
 dependencies {
 	implementation(kotlinx("coroutines-core", "1.3.3"))
 	implementation("com.github.kklisura.cdt:cdt-java-client:2.1.0")
+	implementation("org.apache.pdfbox:pdfbox:2.0.20")
 }

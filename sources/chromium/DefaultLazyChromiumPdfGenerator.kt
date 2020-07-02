@@ -37,9 +37,8 @@ internal class DefaultLazyChromiumPdfGenerator(
 	}
 
 
-	override suspend fun generate(source: PdfGenerationSource, destination: PdfGenerationDestination, settings: PdfGenerationSettings) {
-		ensureDelegate().generate(source = source, destination = destination, settings = settings)
-	}
+	override suspend fun generate(source: PdfGenerationSource, settings: PdfGenerationSettings) =
+		ensureDelegate().generate(source = source, settings = settings)
 
 
 	override suspend fun start() {

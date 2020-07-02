@@ -4,6 +4,8 @@ import com.github.kklisura.cdt.launch.*
 import com.github.kklisura.cdt.protocol.types.page.*
 import com.github.kklisura.cdt.services.*
 import kotlinx.coroutines.*
+import org.apache.pdfbox.pdmodel.*
+import java.io.*
 import java.nio.file.*
 import java.util.*
 import kotlin.coroutines.*
@@ -30,32 +32,17 @@ internal class DefaultChromiumPdfGenerator constructor(
 	}
 
 
-	override suspend fun generate(source: PdfGenerationSource, destination: PdfGenerationDestination, settings: PdfGenerationSettings) {
+	override suspend fun generate(source: PdfGenerationSource, settings: PdfGenerationSettings): PdfGenerationOutput {
 		// TODO We may either want to block the close() call until all generations have been completed or abort pending generations.
 		check(!isClosed) { "Cannot use a ChromiumPdfGenerator that has already been closed." }
 
-		withContext(Dispatchers.IO) {
-			when (destination) {
-				is PdfGenerationDestination.File -> {
-					val destinationFile = destination.file
-
-					require(destinationFile.isAbsolute) { "'destinationFile' must be absolute: $destinationFile" }
-					require(!Files.exists(destinationFile) || (Files.size(destinationFile) == 0L && Files.isRegularFile(destinationFile))) {
-						"'destinationFile' must not already exist: $destinationFile"
-					}
-					require(destinationFile.parent?.let(Files::isWritable) ?: false) { "'destinationFile' parent is not writable: $destinationFile" }
-				}
-
-				is PdfGenerationDestination.Stream ->
-					Unit
-			}
-
+		return withContext(Dispatchers.IO) {
 			when (source) {
 				is PdfGenerationSource.Html ->
 					withTemporaryHtmlFile { sourceFile ->
 						sourceFile.toFile().writeText(source.source, charset = source.charset)
 
-						generate(sourceFile = sourceFile, destination = destination, settings = settings)
+						generate(sourceFile = sourceFile, settings = settings)
 					}
 
 				is PdfGenerationSource.HtmlFile -> {
@@ -67,7 +54,7 @@ internal class DefaultChromiumPdfGenerator constructor(
 					require(Files.isRegularFile(sourceFile)) { "'sourceFile' is not a regular file: $sourceFile" }
 					require(Files.size(sourceFile) > 0L) { "'sourceFile' must not be empty: $sourceFile" }
 
-					generate(sourceFile = source.file, destination = destination, settings = settings)
+					generate(sourceFile = source.file, settings = settings)
 				}
 
 				is PdfGenerationSource.HtmlStream ->
@@ -76,14 +63,14 @@ internal class DefaultChromiumPdfGenerator constructor(
 							source.stream.copyTo(outputStream)
 						}
 
-						generate(sourceFile = sourceFile, destination = destination, settings = settings)
+						generate(sourceFile = sourceFile, settings = settings)
 					}
 			}
 		}
 	}
 
 
-	private suspend fun generate(sourceFile: Path, destination: PdfGenerationDestination, settings: PdfGenerationSettings) {
+	private suspend fun generate(sourceFile: Path, settings: PdfGenerationSettings): PdfGenerationOutput =
 		withContext(Dispatchers.Default) {
 			val tab = service.createTab()
 			val result = try {
@@ -125,19 +112,30 @@ internal class DefaultChromiumPdfGenerator constructor(
 				service.closeTab(tab)
 			}
 
-			Base64.getDecoder().wrap(result.data.byteInputStream(Charsets.US_ASCII)).use { pdfStream ->
-				when (destination) {
-					is PdfGenerationDestination.File ->
-						destination.file.toFile().outputStream().use { destinationStream ->
-							pdfStream.copyTo(destinationStream)
-						}
+			var outputData = Base64.getDecoder().wrap(result.data.byteInputStream(Charsets.US_ASCII)).readBytes()
 
-					is PdfGenerationDestination.Stream ->
-						pdfStream.copyTo(destination.stream)
+			settings.metadata?.let { metadata ->
+				val outputStream = ByteArrayOutputStream()
+
+				PDDocument.load(outputData).use { document ->
+					document.documentInformation = PDDocumentInformation().apply {
+						author = metadata.author
+						creationDate = metadata.creationDate?.toCalendar()
+						creator = metadata.creator
+						keywords = metadata.keywords
+						modificationDate = metadata.modificationDate?.toCalendar()
+						producer = metadata.producer
+						subject = metadata.subject
+						title = metadata.title
+					}
+					document.save(outputStream)
 				}
+
+				outputData = outputStream.toByteArray()
 			}
+
+			PdfGenerationOutput(data = outputData)
 		}
-	}
 
 
 	private inline fun <Result> withTemporaryHtmlFile(action: (temporaryFile: Path) -> Result): Result {

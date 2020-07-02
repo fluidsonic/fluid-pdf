@@ -41,10 +41,8 @@ suspend fun main() {
     ChromiumPdfGenerator.launch(
         binaryFile = Path.of("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
     ).use { generator ->
-        generator.generate(
-            source = PdfGenerationSource.HtmlFile(sourceFile),
-            destination = PdfGenerationDestination.File(destinationFile)
-        )
+        generator.generate(PdfGenerationSource.HtmlFile(sourceFile))
+            .writeTo(destinationFile)
     }
 
     println("PDF has been generated at $destinationFile")
@@ -61,10 +59,8 @@ suspend fun main() {
 ## HTML string to PDF file
 
 ```kotlin
-generator.generate(
-    source = PdfGenerationSource.Html("<strong>Hello world!</strong>"),
-    destination = PdfGenerationDestination.File(destinationFile)
-)
+generator.generate(PdfGenerationSource.Html("<strong>Hello world!</strong>"))
+    .writeTo(PdfGenerationDestination.File(destinationFile))
 ```
 
 💡 Relative paths in HTML & CSS won't resolve. Using `<base href="…">` to specify the base path should help. 
@@ -75,10 +71,8 @@ generator.generate(
 ```kotlin
 val sourceStream: InputStream = …
 
-generator.generate(
-    source = PdfGenerationSource.HtmlStream(sourceStream),
-    destination = PdfGenerationDestination.File(destinationFile)
-)
+generator.generate(PdfGenerationSource.HtmlStream(sourceStream))
+    .writeTo(PdfGenerationDestination.File(destinationFile))
 ```
 
 💡 Relative paths in HTML & CSS won't resolve. Using `<base href="…">` to specify the base path should help.
@@ -89,28 +83,29 @@ generator.generate(
 ```kotlin
 generator.generate(
     source = PdfGenerationSource.Html("<strong>Hello world!</strong>"),
-    destination = PdfGenerationDestination.File(destinationFile),
     settings = PdfGenerationSettings.default.copy(
         includeBackgrounds = false,
+        metadata = PdfMetadata(
+            title = "My PDF"
+        ),
         pageMargins = PdfMargins.cm(top = 2.0, right = 2.0, bottom = 1.0, left = 2.0),
         pageOrientation = PdfOrientation.landscape,
         pageSize = PdfSize.A5,
         preferCssPageSize = false
     )
 )
+    .writeTo(destinationFile)
 ```
 
 
 ## Output to stream
 
 ```kotlin
-generator.generate(
-    source = PdfGenerationSource.Html("<strong>Hello world!</strong>"),
-    destination = PdfGenerationDestination.File(outputStream)
-)
+generator.generate(PdfGenerationSource.Html("<strong>Hello world!</strong>"))
+    .writeTo(outputStream)
 ```
 
-💡 Closing the destination stream is the responsibility of the caller. It will not be closed automatically.
+💡 Closing the output stream is the responsibility of the caller. It will not be closed automatically.
 
 
 
