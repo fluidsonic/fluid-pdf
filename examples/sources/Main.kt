@@ -15,11 +15,10 @@ suspend fun main() {
 	).use { generator ->
 		generator.generate(
 			source = PdfGenerationSource.HtmlFile(sourceFile),
-			destination = PdfGenerationDestination.File(destinationFile),
 			settings = PdfGenerationSettings.default.copy(
 				pageMargins = PdfMargins.cm(top = 2.0, right = 2.0, bottom = 1.0, left = 2.0)
 			)
-		)
+		).writeTo(destinationFile)
 	}
 
 	println()
