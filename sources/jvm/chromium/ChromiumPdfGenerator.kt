@@ -8,9 +8,9 @@ import java.io.*
 import java.nio.file.*
 
 
-interface ChromiumPdfGenerator : PdfGenerator, Closeable {
+public interface ChromiumPdfGenerator : PdfGenerator, Closeable {
 
-	companion object {
+	public companion object {
 
 		private fun checkBinaryFile(file: Path) {
 			require(file.isAbsolute) { "'binaryFile' must be absolute: $file" }
@@ -20,7 +20,7 @@ interface ChromiumPdfGenerator : PdfGenerator, Closeable {
 		}
 
 
-		suspend fun launch(
+		public suspend fun launch(
 			binaryFile: Path,
 			configure: ConfigurationBuilder.() -> Unit = {}
 		): ChromiumPdfGenerator =
@@ -58,7 +58,7 @@ interface ChromiumPdfGenerator : PdfGenerator, Closeable {
 		}
 
 
-		fun lazy(
+		public fun lazy(
 			binaryFile: Path,
 			configure: ConfigurationBuilder.() -> Unit = {}
 		): LazyChromiumPdfGenerator =
@@ -69,7 +69,7 @@ interface ChromiumPdfGenerator : PdfGenerator, Closeable {
 	}
 
 
-	class ConfigurationBuilder internal constructor() {
+	public class ConfigurationBuilder internal constructor() {
 
 		internal fun build() =
 			ChromeLauncherConfiguration()

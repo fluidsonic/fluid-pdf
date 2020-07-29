@@ -1,8 +1,9 @@
 import io.fluidsonic.pdf.*
+import kotlinx.coroutines.*
 import java.nio.file.*
 
 
-suspend fun main() {
+suspend fun main() = withContext(Dispatchers.Default) {
 	// TODO Change the binary file path to your local Chromium or Google Chrome installation.
 
 	val sourceFile = Path.of("examples/data/example.html").toAbsolutePath()

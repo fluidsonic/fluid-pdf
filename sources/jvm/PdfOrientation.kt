@@ -1,7 +1,7 @@
 package io.fluidsonic.pdf
 
 
-enum class PdfOrientation {
+public enum class PdfOrientation {
 
 	landscape,
 	portrait

@@ -1,32 +1,32 @@
 package io.fluidsonic.pdf
 
 
-data class PdfMargins(
+public data class PdfMargins(
 	val top: PdfLengthUnit,
 	val right: PdfLengthUnit,
 	val bottom: PdfLengthUnit,
 	val left: PdfLengthUnit
 ) {
 
-	constructor(all: PdfLengthUnit) :
+	public constructor(all: PdfLengthUnit) :
 		this(top = all, right = all, bottom = all, left = all)
 
 
-	constructor(horizontal: PdfLengthUnit, vertical: PdfLengthUnit) :
+	public constructor(horizontal: PdfLengthUnit, vertical: PdfLengthUnit) :
 		this(top = vertical, right = horizontal, bottom = vertical, left = horizontal)
 
 
-	companion object {
+	public companion object {
 
-		fun cm(all: Double): PdfMargins =
+		public fun cm(all: Double): PdfMargins =
 			cm(top = all, right = all, bottom = all, left = all)
 
 
-		fun cm(vertical: Double, horizontal: Double): PdfMargins =
+		public fun cm(vertical: Double, horizontal: Double): PdfMargins =
 			cm(top = vertical, right = horizontal, bottom = vertical, left = horizontal)
 
 
-		fun cm(top: Double, right: Double, bottom: Double, left: Double): PdfMargins =
+		public fun cm(top: Double, right: Double, bottom: Double, left: Double): PdfMargins =
 			PdfMargins(
 				top = PdfLengthUnit.cm(top),
 				right = PdfLengthUnit.cm(right),
@@ -35,15 +35,15 @@ data class PdfMargins(
 			)
 
 
-		fun inch(all: Double): PdfMargins =
+		public fun inch(all: Double): PdfMargins =
 			inch(top = all, right = all, bottom = all, left = all)
 
 
-		fun inch(vertical: Double, horizontal: Double): PdfMargins =
+		public fun inch(vertical: Double, horizontal: Double): PdfMargins =
 			inch(top = vertical, right = horizontal, bottom = vertical, left = horizontal)
 
 
-		fun inch(top: Double, right: Double, bottom: Double, left: Double): PdfMargins =
+		public fun inch(top: Double, right: Double, bottom: Double, left: Double): PdfMargins =
 			PdfMargins(
 				top = PdfLengthUnit.inch(top),
 				right = PdfLengthUnit.inch(right),
@@ -52,15 +52,15 @@ data class PdfMargins(
 			)
 
 
-		fun mm(all: Double): PdfMargins =
+		public fun mm(all: Double): PdfMargins =
 			mm(top = all, right = all, bottom = all, left = all)
 
 
-		fun mm(vertical: Double, horizontal: Double): PdfMargins =
+		public fun mm(vertical: Double, horizontal: Double): PdfMargins =
 			mm(top = vertical, right = horizontal, bottom = vertical, left = horizontal)
 
 
-		fun mm(top: Double, right: Double, bottom: Double, left: Double): PdfMargins =
+		public fun mm(top: Double, right: Double, bottom: Double, left: Double): PdfMargins =
 			PdfMargins(
 				top = PdfLengthUnit.mm(top),
 				right = PdfLengthUnit.mm(right),

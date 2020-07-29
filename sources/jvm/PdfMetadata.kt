@@ -3,7 +3,7 @@ package io.fluidsonic.pdf
 import java.time.*
 
 
-data class PdfMetadata(
+public data class PdfMetadata(
 	val author: String? = null,
 	val creationDate: Instant? = null,
 	val creator: String? = null,

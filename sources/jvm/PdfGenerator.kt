@@ -1,9 +1,9 @@
 package io.fluidsonic.pdf
 
 
-interface PdfGenerator {
+public interface PdfGenerator {
 
-	suspend fun generate(
+	public suspend fun generate(
 		source: PdfGenerationSource,
 		settings: PdfGenerationSettings = PdfGenerationSettings.default
 	): PdfGenerationOutput

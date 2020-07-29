@@ -1,7 +1,7 @@
 package io.fluidsonic.pdf
 
 
-data class PdfGenerationSettings(
+public data class PdfGenerationSettings(
 	val includeBackgrounds: Boolean,
 	val metadata: PdfMetadata?,
 	val pageMargins: PdfMargins,
@@ -10,9 +10,9 @@ data class PdfGenerationSettings(
 	val preferCssPageSize: Boolean
 ) {
 
-	companion object {
+	public companion object {
 
-		val default: PdfGenerationSettings = PdfGenerationSettings(
+		public val default: PdfGenerationSettings = PdfGenerationSettings(
 			includeBackgrounds = true,
 			metadata = null,
 			pageMargins = PdfMargins.cm(all = 1.0),
