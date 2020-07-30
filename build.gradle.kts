@@ -1,10 +1,10 @@
 import io.fluidsonic.gradle.*
 
 plugins {
-	id("io.fluidsonic.gradle") version "1.1.0"
+	id("io.fluidsonic.gradle") version "1.1.2"
 }
 
-fluidLibrary(name = "pdf", version = "0.10.0")
+fluidLibrary(name = "pdf", version = "0.10.1")
 
 fluidLibraryModule(description = "Easy PDF generation with HTML & CSS using Chromium or Google Chrome") {
 	publishSingleTargetAsModule()
