@@ -3,7 +3,7 @@ fluid-pdf
 
 [![Maven Central](https://img.shields.io/maven-central/v/io.fluidsonic.pdf/fluid-pdf?label=Maven%20Central)](https://search.maven.org/artifact/io.fluidsonic.pdf/fluid-pdf)
 [![JCenter](https://img.shields.io/bintray/v/fluidsonic/kotlin/pdf?label=JCenter)](https://bintray.com/fluidsonic/kotlin/pdf)
-[![Kotlin](https://img.shields.io/badge/Kotlin-1.4.0--rc-blue.svg)](https://github.com/JetBrains/kotlin/releases/v1.4.0-rc)
+[![Kotlin](https://img.shields.io/badge/Kotlin-1.4.21-blue.svg)](https://github.com/JetBrains/kotlin/releases/v1.4.21)
 [![#fluid-libraries Slack Channel](https://img.shields.io/badge/slack-%23fluid--libraries-543951.svg)](https://kotlinlang.slack.com/messages/C7UDFSVT2/)
 
 Easy PDF generation with HTML & CSS using Chromium or Google Chrome
@@ -14,13 +14,12 @@ Installation
 ------------
 
 `build.gradle.kts`:
+
 ```kotlin
 dependencies {
-    implementation("io.fluidsonic.pdf:fluid-pdf:0.10.1")
+	implementation("io.fluidsonic.pdf:fluid-pdf:0.10.1")
 }
 ```
-
-
 
 Usage
 -----
@@ -33,19 +32,19 @@ import java.nio.file.*
 
 
 suspend fun main() {
-    // TODO Change the binary file path to your local Chromium or Google Chrome installation.
+	// TODO Change the binary file path to your local Chromium or Google Chrome installation.
 
-    val sourceFile = Path.of("input.html").toAbsolutePath()
-    val destinationFile = Path.of("output.pdf").toAbsolutePath()
+	val sourceFile = Path.of("input.html").toAbsolutePath()
+	val destinationFile = Path.of("output.pdf").toAbsolutePath()
 
-    ChromiumPdfGenerator.launch(
-        binaryFile = Path.of("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
-    ).use { generator ->
-        generator.generate(PdfGenerationSource.HtmlFile(sourceFile))
-            .writeTo(destinationFile)
-    }
+	ChromiumPdfGenerator.launch(
+		binaryFile = Path.of("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
+	).use { generator ->
+		generator.generate(PdfGenerationSource.HtmlFile(sourceFile))
+			.writeTo(destinationFile)
+	}
 
-    println("PDF has been generated at $destinationFile")
+	println("PDF has been generated at $destinationFile")
 }
 ```
 
@@ -55,16 +54,14 @@ suspend fun main() {
 - Use `PdfGenerator`'s `.generate()` to create any number of PDFs.
 - Use `PdfGenerator` interface to hide implementation details (use of Chromium, `.close()`) as needed.
 
-
 ## HTML string to PDF file
 
 ```kotlin
 generator.generate(PdfGenerationSource.Html("<strong>Hello world!</strong>"))
-    .writeTo(PdfGenerationDestination.File(destinationFile))
+	.writeTo(PdfGenerationDestination.File(destinationFile))
 ```
 
-💡 Relative paths in HTML & CSS won't resolve. Using `<base href="…">` to specify the base path should help. 
-
+💡 Relative paths in HTML & CSS won't resolve. Using `<base href="…">` to specify the base path should help.
 
 ## HTML stream to PDF file
 
@@ -72,37 +69,35 @@ generator.generate(PdfGenerationSource.Html("<strong>Hello world!</strong>"))
 val sourceStream: InputStream = …
 
 generator.generate(PdfGenerationSource.HtmlStream(sourceStream))
-    .writeTo(PdfGenerationDestination.File(destinationFile))
+	.writeTo(PdfGenerationDestination.File(destinationFile))
 ```
 
 💡 Relative paths in HTML & CSS won't resolve. Using `<base href="…">` to specify the base path should help.
-
 
 ## PDF generation settings
 
 ```kotlin
 generator.generate(
-    source = PdfGenerationSource.Html("<strong>Hello world!</strong>"),
-    settings = PdfGenerationSettings.default.copy(
-        includeBackgrounds = false,
-        metadata = PdfMetadata(
-            title = "My PDF"
-        ),
-        pageMargins = PdfMargins.cm(top = 2.0, right = 2.0, bottom = 1.0, left = 2.0),
-        pageOrientation = PdfOrientation.landscape,
-        pageSize = PdfSize.A5,
-        preferCssPageSize = false
-    )
+	source = PdfGenerationSource.Html("<strong>Hello world!</strong>"),
+	settings = PdfGenerationSettings.default.copy(
+		includeBackgrounds = false,
+		metadata = PdfMetadata(
+			title = "My PDF"
+		),
+		pageMargins = PdfMargins.cm(top = 2.0, right = 2.0, bottom = 1.0, left = 2.0),
+		pageOrientation = PdfOrientation.landscape,
+		pageSize = PdfSize.A5,
+		preferCssPageSize = false
+	)
 )
-    .writeTo(destinationFile)
+	.writeTo(destinationFile)
 ```
-
 
 ## Output to stream
 
 ```kotlin
 generator.generate(PdfGenerationSource.Html("<strong>Hello world!</strong>"))
-    .writeTo(outputStream)
+	.writeTo(outputStream)
 ```
 
 💡 Closing the output stream is the responsibility of the caller. It will not be closed automatically.
@@ -117,8 +112,6 @@ Contributions welcome 🙏
 - Add KDoc to all public API.
 - Check if `.generate()` works well if used from multiple threads and document if that is the case.
 - Add support for header & footer templates.
-
-
 
 License
 -------

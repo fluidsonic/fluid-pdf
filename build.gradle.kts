@@ -1,7 +1,7 @@
 import io.fluidsonic.gradle.*
 
 plugins {
-	id("io.fluidsonic.gradle") version "1.1.2"
+	id("io.fluidsonic.gradle") version "1.1.16"
 }
 
 fluidLibrary(name = "pdf", version = "0.10.1")
@@ -12,9 +12,9 @@ fluidLibraryModule(description = "Easy PDF generation with HTML & CSS using Chro
 	targets {
 		jvm {
 			dependencies {
-				implementation(kotlinx("coroutines-core", "1.3.8-1.4.0-rc"))
+				implementation(kotlinx("coroutines-core", "1.4.2"))
 				implementation("com.github.kklisura.cdt:cdt-java-client:2.1.0")
-				implementation("org.apache.pdfbox:pdfbox:2.0.20")
+				implementation("org.apache.pdfbox:pdfbox:2.0.21")
 			}
 		}
 	}
