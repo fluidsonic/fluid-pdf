@@ -4,6 +4,7 @@ import com.github.kklisura.cdt.launch.*
 import com.github.kklisura.cdt.protocol.types.page.*
 import com.github.kklisura.cdt.services.*
 import kotlinx.coroutines.*
+import org.apache.pdfbox.cos.*
 import org.apache.pdfbox.pdmodel.*
 import java.io.*
 import java.nio.file.*
@@ -127,6 +128,12 @@ internal class DefaultChromiumPdfGenerator constructor(
 						producer = metadata.producer
 						subject = metadata.subject
 						title = metadata.title
+					}
+					metadata.documentId?.let { documentId ->
+						document.document.documentID = COSArray().apply {
+							add(COSString(documentId.initial))
+							add(COSString(documentId.revision))
+						}
 					}
 					document.save(outputStream)
 				}
