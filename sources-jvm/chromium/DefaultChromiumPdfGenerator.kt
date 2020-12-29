@@ -3,18 +3,19 @@ package io.fluidsonic.pdf
 import com.github.kklisura.cdt.launch.*
 import com.github.kklisura.cdt.protocol.types.page.*
 import com.github.kklisura.cdt.services.*
-import kotlinx.coroutines.*
-import org.apache.pdfbox.cos.*
-import org.apache.pdfbox.pdmodel.*
 import java.io.*
 import java.nio.file.*
 import java.util.*
 import kotlin.coroutines.*
+import kotlinx.coroutines.*
+import org.apache.pdfbox.cos.*
+import org.apache.pdfbox.pdmodel.*
 
 
+// FIXME Allow specifying dispatchers.
 internal class DefaultChromiumPdfGenerator constructor(
 	private val launcher: ChromeLauncher,
-	private val service: ChromeService
+	private val service: ChromeService,
 ) : ChromiumPdfGenerator {
 
 	@Volatile
@@ -141,7 +142,7 @@ internal class DefaultChromiumPdfGenerator constructor(
 				outputData = outputStream.toByteArray()
 			}
 
-			PdfGenerationOutput(data = outputData)
+			PdfGenerationOutput.withByteArray(data = outputData)
 		}
 
 
