@@ -14,7 +14,7 @@ fluidLibraryModule(description = "Easy PDF generation with HTML & CSS using Chro
 			dependencies {
 				implementation(kotlinx("coroutines-core", "1.4.2"))
 				implementation("com.github.kklisura.cdt:cdt-java-client:2.1.0")
-				implementation("org.apache.pdfbox:pdfbox:2.0.21")
+				implementation("org.apache.pdfbox:pdfbox:2.0.22")
 			}
 		}
 	}
