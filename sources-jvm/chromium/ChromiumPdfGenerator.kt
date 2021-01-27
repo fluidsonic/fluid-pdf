@@ -60,10 +60,12 @@ public interface ChromiumPdfGenerator : PdfGenerator, Closeable {
 
 		public fun lazy(
 			binaryFile: Path,
+			dispatcher: CoroutineDispatcher = Dispatchers.IO,
 			configure: ConfigurationBuilder.() -> Unit = {},
 		): LazyChromiumPdfGenerator =
 			DefaultLazyChromiumPdfGenerator(
 				binaryFile = binaryFile,
+				dispatcher = dispatcher,
 				configuration = ConfigurationBuilder().apply(configure).build()
 			)
 	}
