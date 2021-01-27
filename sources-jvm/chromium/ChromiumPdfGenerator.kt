@@ -3,9 +3,9 @@ package io.fluidsonic.pdf
 import com.github.kklisura.cdt.launch.*
 import com.github.kklisura.cdt.launch.config.*
 import com.github.kklisura.cdt.launch.support.impl.*
-import kotlinx.coroutines.*
 import java.io.*
 import java.nio.file.*
+import kotlinx.coroutines.*
 
 
 public interface ChromiumPdfGenerator : PdfGenerator, Closeable {
@@ -22,18 +22,21 @@ public interface ChromiumPdfGenerator : PdfGenerator, Closeable {
 
 		public suspend fun launch(
 			binaryFile: Path,
-			configure: ConfigurationBuilder.() -> Unit = {}
+			dispatcher: CoroutineDispatcher = Dispatchers.IO,
+			configure: ConfigurationBuilder.() -> Unit = {},
 		): ChromiumPdfGenerator =
 			launch(
 				binaryFile = binaryFile,
-				configuration = ConfigurationBuilder().apply(configure).build()
+				configuration = ConfigurationBuilder().apply(configure).build(),
+				dispatcher = dispatcher,
 			)
 
 
 		internal suspend fun launch(
 			binaryFile: Path,
-			configuration: ChromeLauncherConfiguration
-		): ChromiumPdfGenerator = withContext(Dispatchers.Default) {
+			configuration: ChromeLauncherConfiguration,
+			dispatcher: CoroutineDispatcher = Dispatchers.IO,
+		): ChromiumPdfGenerator = withContext(dispatcher) {
 			checkBinaryFile(binaryFile)
 
 			val launcher = ChromeLauncher(
@@ -51,16 +54,13 @@ public interface ChromiumPdfGenerator : PdfGenerator, Closeable {
 					.build()
 			)
 
-			DefaultChromiumPdfGenerator(
-				launcher = launcher,
-				service = service
-			)
+			DefaultChromiumPdfGenerator(dispatcher = dispatcher, launcher = launcher, service = service)
 		}
 
 
 		public fun lazy(
 			binaryFile: Path,
-			configure: ConfigurationBuilder.() -> Unit = {}
+			configure: ConfigurationBuilder.() -> Unit = {},
 		): LazyChromiumPdfGenerator =
 			DefaultLazyChromiumPdfGenerator(
 				binaryFile = binaryFile,

@@ -1,14 +1,14 @@
 package io.fluidsonic.pdf
 
 import com.github.kklisura.cdt.launch.config.*
+import java.nio.file.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.*
-import java.nio.file.*
 
 
 internal class DefaultLazyChromiumPdfGenerator(
 	private val binaryFile: Path,
-	private val configuration: ChromeLauncherConfiguration
+	private val configuration: ChromeLauncherConfiguration,
 ) : LazyChromiumPdfGenerator {
 
 	private var delegate: ChromiumPdfGenerator? = null
@@ -37,8 +37,8 @@ internal class DefaultLazyChromiumPdfGenerator(
 	}
 
 
-	override suspend fun generate(source: PdfGenerationSource, settings: PdfGenerationSettings) =
-		ensureDelegate().generate(source = source, settings = settings)
+	override suspend fun generate(input: PdfGenerationInput) =
+		ensureDelegate().generate(input)
 
 
 	override suspend fun start() {

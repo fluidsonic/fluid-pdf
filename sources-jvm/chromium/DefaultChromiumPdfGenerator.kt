@@ -12,8 +12,8 @@ import org.apache.pdfbox.cos.*
 import org.apache.pdfbox.pdmodel.*
 
 
-// FIXME Allow specifying dispatchers.
 internal class DefaultChromiumPdfGenerator constructor(
+	private val dispatcher: CoroutineDispatcher,
 	private val launcher: ChromeLauncher,
 	private val service: ChromeService,
 ) : ChromiumPdfGenerator {
@@ -22,6 +22,7 @@ internal class DefaultChromiumPdfGenerator constructor(
 	private var isClosed = false
 
 
+	// TODO We may either want to block a close() call until all generations have been completed or abort pending generations.
 	override fun close() {
 		synchronized(this) {
 			if (isClosed)
@@ -34,17 +35,16 @@ internal class DefaultChromiumPdfGenerator constructor(
 	}
 
 
-	override suspend fun generate(source: PdfGenerationSource, settings: PdfGenerationSettings): PdfGenerationOutput {
-		// TODO We may either want to block the close() call until all generations have been completed or abort pending generations.
+	override suspend fun generate(input: PdfGenerationInput): PdfGenerationOutput {
 		check(!isClosed) { "Cannot use a ChromiumPdfGenerator that has already been closed." }
 
-		return withContext(Dispatchers.IO) {
-			when (source) {
+		return withContext(dispatcher) {
+			when (val source = input.source) {
 				is PdfGenerationSource.Html ->
 					withTemporaryHtmlFile { sourceFile ->
 						sourceFile.toFile().writeText(source.source, charset = source.charset)
 
-						generate(sourceFile = sourceFile, settings = settings)
+						generate(sourceFile = sourceFile, settings = input.settings)
 					}
 
 				is PdfGenerationSource.HtmlFile -> {
@@ -56,7 +56,7 @@ internal class DefaultChromiumPdfGenerator constructor(
 					require(Files.isRegularFile(sourceFile)) { "'sourceFile' is not a regular file: $sourceFile" }
 					require(Files.size(sourceFile) > 0L) { "'sourceFile' must not be empty: $sourceFile" }
 
-					generate(sourceFile = source.file, settings = settings)
+					generate(sourceFile = source.file, settings = input.settings)
 				}
 
 				is PdfGenerationSource.HtmlStream ->
@@ -65,7 +65,7 @@ internal class DefaultChromiumPdfGenerator constructor(
 							source.stream.copyTo(outputStream)
 						}
 
-						generate(sourceFile = sourceFile, settings = settings)
+						generate(sourceFile = sourceFile, settings = input.settings)
 					}
 			}
 		}
@@ -73,7 +73,7 @@ internal class DefaultChromiumPdfGenerator constructor(
 
 
 	private suspend fun generate(sourceFile: Path, settings: PdfGenerationSettings): PdfGenerationOutput =
-		withContext(Dispatchers.Default) {
+		withContext(dispatcher) {
 			val tab = service.createTab()
 			val result = try {
 				service.createDevToolsService(tab).use { devToolsService ->
