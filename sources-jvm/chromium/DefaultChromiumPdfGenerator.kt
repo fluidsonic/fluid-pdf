@@ -92,7 +92,7 @@ internal class DefaultChromiumPdfGenerator constructor(
 							PdfOrientation.landscape -> true
 							PdfOrientation.portrait -> false
 						},
-						false,
+						true,
 						settings.includeBackgrounds,
 						1.0,
 						settings.pageSize.width.inch,
@@ -103,10 +103,10 @@ internal class DefaultChromiumPdfGenerator constructor(
 						settings.pageMargins.right.inch,
 						"",
 						false,
-						"",
-						"",
+						settings.headerHtml.orEmpty().ifEmpty { " " },
+						settings.footerHtml.orEmpty().ifEmpty { " " },
 						settings.preferCssPageSize,
-						PrintToPDFTransferMode.RETURN_AS_BASE_64
+						PrintToPDFTransferMode.RETURN_AS_BASE_64,
 					)
 				}
 			}
