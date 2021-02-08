@@ -51,6 +51,7 @@ public interface ChromiumPdfGenerator : PdfGenerator, Closeable {
 				ChromeArguments.defaults(true)
 					.incognito()
 					.userDataDir("/dev/null")
+					.additionalArguments("no-sandbox", true)
 					.build()
 			)
 
