@@ -4,7 +4,7 @@ plugins {
 	id("io.fluidsonic.gradle") version "1.1.22"
 }
 
-fluidLibrary(name = "pdf", version = "0.14.2")
+fluidLibrary(name = "pdf", version = "0.14.3")
 
 fluidLibraryModule(description = "Easy PDF generation with HTML & CSS using Chromium or Google Chrome") {
 	targets {
