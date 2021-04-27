@@ -24,17 +24,22 @@ public interface ChromiumPdfGenerator : PdfGenerator, Closeable {
 			binaryFile: Path,
 			dispatcher: CoroutineDispatcher = Dispatchers.IO,
 			configure: ConfigurationBuilder.() -> Unit = {},
-		): ChromiumPdfGenerator =
-			launch(
+		): ChromiumPdfGenerator {
+			val builder = ConfigurationBuilder().apply(configure)
+
+			return launch(
+				arguments = builder.buildArguments(),
 				binaryFile = binaryFile,
-				configuration = ConfigurationBuilder().apply(configure).build(),
+				configuration = builder.build(),
 				dispatcher = dispatcher,
 			)
+		}
 
 
 		internal suspend fun launch(
 			binaryFile: Path,
 			configuration: ChromeLauncherConfiguration,
+			arguments: Map<String, String>,
 			dispatcher: CoroutineDispatcher = Dispatchers.IO,
 		): ChromiumPdfGenerator = withContext(dispatcher) {
 			checkBinaryFile(binaryFile)
@@ -51,7 +56,12 @@ public interface ChromiumPdfGenerator : PdfGenerator, Closeable {
 				ChromeArguments.defaults(true)
 					.incognito()
 					.userDataDir("/dev/null")
+					.additionalArguments("font-render-hinting", "medium") // https://github.com/puppeteer/puppeteer/issues/2410
 					.additionalArguments("no-sandbox", true)
+					.apply {
+						for ((name, value) in arguments)
+							additionalArguments(name, value)
+					}
 					.build()
 			)
 
@@ -63,18 +73,34 @@ public interface ChromiumPdfGenerator : PdfGenerator, Closeable {
 			binaryFile: Path,
 			dispatcher: CoroutineDispatcher = Dispatchers.IO,
 			configure: ConfigurationBuilder.() -> Unit = {},
-		): LazyChromiumPdfGenerator =
-			DefaultLazyChromiumPdfGenerator(
+		): LazyChromiumPdfGenerator {
+			val builder = ConfigurationBuilder().apply(configure)
+
+			return DefaultLazyChromiumPdfGenerator(
+				arguments = builder.buildArguments(),
 				binaryFile = binaryFile,
+				configuration = builder.build(),
 				dispatcher = dispatcher,
-				configuration = ConfigurationBuilder().apply(configure).build()
 			)
+		}
 	}
 
 
 	public class ConfigurationBuilder internal constructor() {
 
+		private val arguments = mutableMapOf<String, String>()
+
+
+		public fun argument(name: String, value: String) {
+			arguments[name] = value
+		}
+
+
 		internal fun build() =
 			ChromeLauncherConfiguration()
+
+
+		internal fun buildArguments() =
+			arguments.toMap()
 	}
 }

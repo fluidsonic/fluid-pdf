@@ -7,6 +7,7 @@ import kotlinx.coroutines.sync.*
 
 
 internal class DefaultLazyChromiumPdfGenerator(
+	private val arguments: Map<String, String>,
 	private val binaryFile: Path,
 	private val dispatcher: CoroutineDispatcher,
 	private val configuration: ChromeLauncherConfiguration,
@@ -48,6 +49,7 @@ internal class DefaultLazyChromiumPdfGenerator(
 
 			if (delegate == null)
 				delegate = ChromiumPdfGenerator.launch(
+					arguments = arguments,
 					binaryFile = binaryFile,
 					configuration = configuration,
 					dispatcher = dispatcher,
