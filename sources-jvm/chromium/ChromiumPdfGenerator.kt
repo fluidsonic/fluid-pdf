@@ -56,7 +56,7 @@ public interface ChromiumPdfGenerator : PdfGenerator, Closeable {
 				ChromeArguments.defaults(true)
 					.incognito()
 					.userDataDir("/dev/null")
-					.additionalArguments("font-render-hinting", "medium") // https://github.com/puppeteer/puppeteer/issues/2410
+					.additionalArguments("font-render-hinting", "none") // https://github.com/puppeteer/puppeteer/issues/2410
 					.additionalArguments("no-sandbox", true)
 					.apply {
 						for ((name, value) in arguments)
