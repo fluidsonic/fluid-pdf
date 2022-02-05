@@ -1,8 +1,8 @@
 package io.fluidsonic.pdf
 
 
-@Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
-public inline class PdfLengthUnit @PublishedApi internal constructor(private val _mm: Double) {
+@JvmInline
+public value class PdfLengthUnit private constructor(private val _mm: Double) {
 
 	public val cm: Double
 		get() = _mm / mmPerCm
