@@ -81,7 +81,7 @@ internal class DefaultChromiumPdfGenerator constructor(
 					page.enable()
 					page.navigate(sourceFile.toUri().toString())
 
-					suspendCancellableCoroutine<Unit> { continuation ->
+					suspendCancellableCoroutine { continuation ->
 						val listener = page.onLoadEventFired { continuation.resume(Unit) }
 
 						continuation.invokeOnCancellation { listener.unsubscribe() }

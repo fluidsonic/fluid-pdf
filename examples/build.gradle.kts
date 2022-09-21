@@ -12,7 +12,7 @@ fluidLibraryModule(description = "examples") {
 			dependencies {
 				implementation(rootProject)
 				implementation(kotlinx("coroutines-core", "1.6.0"))
-				implementation("org.slf4j:slf4j-simple:1.7.35")
+				implementation("org.slf4j:slf4j-simple:2.0.2")
 			}
 		}
 	}
