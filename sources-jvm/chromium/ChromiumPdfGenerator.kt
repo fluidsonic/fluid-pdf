@@ -58,6 +58,7 @@ public interface ChromiumPdfGenerator : PdfGenerator, Closeable {
 					.userDataDir("/dev/null")
 					.additionalArguments("font-render-hinting", "none") // https://github.com/puppeteer/puppeteer/issues/2410
 					.additionalArguments("no-sandbox", true)
+					.additionalArguments("remote-allow-origins", "*") // https://groups.google.com/g/chromedriver-users/c/xL5-13_qGaA
 					.apply {
 						for ((name, value) in arguments)
 							additionalArguments(name, value)
