@@ -2,7 +2,7 @@ fluid-pdf
 =========
 
 [![Maven Central](https://img.shields.io/maven-central/v/io.fluidsonic.pdf/fluid-pdf?label=Maven%20Central)](https://search.maven.org/artifact/io.fluidsonic.pdf/fluid-pdf)
-[![Kotlin](https://img.shields.io/badge/Kotlin-1.7.20-blue.svg)](https://github.com/JetBrains/kotlin/releases/v1.7.20)
+[![Kotlin](https://img.shields.io/badge/Kotlin-1.8.22-blue.svg)](https://github.com/JetBrains/kotlin/releases/v1.8.22)
 [![#fluid-libraries Slack Channel](https://img.shields.io/badge/slack-%23fluid--libraries-543951.svg)](https://kotlinlang.slack.com/messages/C7UDFSVT2/)
 
 Easy PDF generation with HTML & CSS using Chromium or Google Chrome
