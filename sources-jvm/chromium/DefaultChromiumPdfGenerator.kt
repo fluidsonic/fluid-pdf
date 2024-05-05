@@ -8,11 +8,13 @@ import java.nio.file.*
 import java.util.*
 import kotlin.coroutines.*
 import kotlinx.coroutines.*
+import org.apache.pdfbox.*
 import org.apache.pdfbox.cos.*
 import org.apache.pdfbox.pdmodel.*
+import org.apache.pdfbox.pdmodel.encryption.*
 
 
-internal class DefaultChromiumPdfGenerator constructor(
+internal class DefaultChromiumPdfGenerator(
 	private val dispatcher: CoroutineDispatcher,
 	private val launcher: ChromeLauncher,
 	private val service: ChromeService,
@@ -116,26 +118,52 @@ internal class DefaultChromiumPdfGenerator constructor(
 
 			var outputData = Base64.getDecoder().wrap(result.data.byteInputStream(Charsets.US_ASCII)).readBytes()
 
-			settings.metadata?.let { metadata ->
+			val encryption = settings.encryption
+			val metadata = settings.metadata
+			if (encryption != null || metadata != null) {
 				val outputStream = ByteArrayOutputStream()
 
-				PDDocument.load(outputData).use { document ->
-					document.documentInformation = PDDocumentInformation().apply {
-						author = metadata.author
-						creationDate = metadata.creationDate?.toCalendar()
-						creator = metadata.creator
-						keywords = metadata.keywords
-						modificationDate = metadata.modificationDate?.toCalendar()
-						producer = metadata.producer
-						subject = metadata.subject
-						title = metadata.title
+				Loader.loadPDF(outputData).use { document ->
+					if (encryption != null) {
+						document.protect(
+							StandardProtectionPolicy(
+								encryption.ownerPassword,
+								encryption.userPassword,
+								AccessPermission().apply {
+									val permissions = encryption.permissions
+
+									setCanAssembleDocument(permissions.assemblyAllowed)
+									setCanExtractContent(permissions.contentExtractionAllowed)
+									setCanExtractForAccessibility(permissions.contentExtractionForAccessibilityAllowed)
+									setCanFillInForm(permissions.formFieldFillingAllowed)
+									setCanModify(permissions.contentModificationAllowed)
+									setCanModifyAnnotations(permissions.annotationAndFormFieldModificationAllowed)
+									setCanPrint(permissions.printQuality != PdfPermissions.PrintQuality.none)
+									setCanPrintFaithful(permissions.printQuality == PdfPermissions.PrintQuality.high)
+								},
+							)
+						)
 					}
-					metadata.documentId?.let { documentId ->
-						document.document.documentID = COSArray().apply {
-							add(COSString(documentId.initial))
-							add(COSString(documentId.revision))
+
+					if (metadata != null) {
+						document.documentInformation = PDDocumentInformation().apply {
+							author = metadata.author
+							creationDate = metadata.creationDate?.toCalendar()
+							creator = metadata.creator
+							keywords = metadata.keywords
+							modificationDate = metadata.modificationDate?.toCalendar()
+							producer = metadata.producer
+							subject = metadata.subject
+							title = metadata.title
+						}
+						metadata.documentId?.let { documentId ->
+							document.document.documentID = COSArray().apply {
+								add(COSString(documentId.initial))
+								add(COSString(documentId.revision))
+							}
 						}
 					}
+
 					document.save(outputStream)
 				}
 

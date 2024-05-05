@@ -1,6 +1,7 @@
 import io.fluidsonic.pdf.*
 import java.nio.file.*
 import java.time.*
+import kotlin.io.path.*
 import kotlinx.coroutines.*
 
 
@@ -10,7 +11,9 @@ suspend fun main() = withContext(Dispatchers.Default) {
 	val sourceFile = Path.of("examples/data/example.html").toAbsolutePath()
 	val destinationFile = Path.of("examples/data/example.pdf").toAbsolutePath()
 
-	Files.deleteIfExists(destinationFile)
+	withContext(Dispatchers.IO) {
+		destinationFile.deleteIfExists()
+	}
 
 	ChromiumPdfGenerator.launch(
 		binaryFile = Path.of("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
@@ -18,6 +21,14 @@ suspend fun main() = withContext(Dispatchers.Default) {
 		generator.generate(
 			source = PdfGenerationSource.HtmlFile(sourceFile),
 			settings = PdfGenerationSettings.default.copy(
+				encryption = PdfEncryption(
+					ownerPassword = "secret",
+					permissions = PdfPermissions.none.copy(
+						contentExtractionAllowed = true,
+						contentExtractionForAccessibilityAllowed = true,
+						printQuality = PdfPermissions.PrintQuality.high,
+					),
+				),
 				pageMargins = PdfMargins.cm(top = 2.0, right = 2.0, bottom = 1.0, left = 2.0),
 				metadata = PdfMetadata(
 					author = "Marc Knaup",

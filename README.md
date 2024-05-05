@@ -79,6 +79,14 @@ generator.generate(PdfGenerationSource.HtmlStream(sourceStream))
 generator.generate(
 	source = PdfGenerationSource.Html("<strong>Hello world!</strong>"),
 	settings = PdfGenerationSettings.default.copy(
+		encryption = PdfEncryption(
+			ownerPassword = "secret",
+			permissions = PdfPermissions.none.copy(
+				contentExtractionAllowed = true,
+				contentExtractionForAccessibilityAllowed = true,
+				printQuality = PdfPermissions.PrintQuality.high,
+			),
+		),
 		includeBackgrounds = false,
 		metadata = PdfMetadata(
 			title = "My PDF"

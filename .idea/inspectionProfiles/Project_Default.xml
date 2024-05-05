@@ -64,12 +64,16 @@
     <inspection_tool class="ConfusingElse" enabled="false" level="INFORMATION" enabled_by_default="false">
       <option name="reportWhenNoStatementFollow" value="true" />
     </inspection_tool>
+    <inspection_tool class="ConstPropertyName" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="namePattern" value="[a-z][_a-zA-Z\d]*" />
+    </inspection_tool>
     <inspection_tool class="ConstantConditionalExpression" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="ConstantConditions" enabled="false" level="WARNING" enabled_by_default="false">
       <option name="SUGGEST_NULLABLE_ANNOTATIONS" value="false" />
       <option name="DONT_REPORT_TRUE_ASSERT_STATEMENTS" value="false" />
     </inspection_tool>
     <inspection_tool class="ConstantExpression" enabled="false" level="INFORMATION" enabled_by_default="false" />
+    <inspection_tool class="ConstantValue" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="ContinueOrBreakFromFinallyBlock" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="Contract" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="ControlFlowStatementWithoutBraces" enabled="false" level="INFORMATION" enabled_by_default="false" />
@@ -212,7 +216,6 @@
     <inspection_tool class="FrequentlyUsedInheritorInspection" enabled="false" level="INFORMATION" enabled_by_default="false" />
     <inspection_tool class="FunctionalExpressionCanBeFolded" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="FuseStreamOperations" enabled="false" level="WARNING" enabled_by_default="false" />
-    <inspection_tool class="Guava" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="IdempotentLoopBody" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="IfCanBeAssertion" enabled="false" level="INFORMATION" enabled_by_default="false" />
     <inspection_tool class="IfCanBeSwitch" enabled="false" level="WARNING" enabled_by_default="false">
@@ -295,6 +298,7 @@
     <inspection_tool class="JavaReflectionMemberAccess" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="JavaRequiresAutoModule" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="JavacQuirks" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="JavadocDeclaration" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="JavadocReference" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="JoinDeclarationAndAssignmentJava" enabled="false" level="INFORMATION" enabled_by_default="false" />
     <inspection_tool class="Junit4Converter" enabled="false" level="INFORMATION" enabled_by_default="false" />
@@ -339,6 +343,39 @@
     </inspection_tool>
     <inspection_tool class="MismatchedStringBuilderQueryUpdate" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="MismatchedStringCase" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="MissingJavadoc" enabled="false" level="WARNING" enabled_by_default="false">
+      <option name="PACKAGE_SETTINGS">
+        <Options>
+          <option name="ENABLED" value="false" />
+        </Options>
+      </option>
+      <option name="MODULE_SETTINGS">
+        <Options>
+          <option name="ENABLED" value="false" />
+        </Options>
+      </option>
+      <option name="TOP_LEVEL_CLASS_SETTINGS">
+        <Options>
+          <option name="ENABLED" value="false" />
+        </Options>
+      </option>
+      <option name="INNER_CLASS_SETTINGS">
+        <Options>
+          <option name="ENABLED" value="false" />
+        </Options>
+      </option>
+      <option name="METHOD_SETTINGS">
+        <Options>
+          <option name="REQUIRED_TAGS" value="@return@param@throws or @exception" />
+          <option name="ENABLED" value="false" />
+        </Options>
+      </option>
+      <option name="FIELD_SETTINGS">
+        <Options>
+          <option name="ENABLED" value="false" />
+        </Options>
+      </option>
+    </inspection_tool>
     <inspection_tool class="MissingOverrideAnnotation" enabled="false" level="INFORMATION" enabled_by_default="false">
       <option name="ignoreObjectMethods" value="true" />
       <option name="ignoreAnonymousClassMethods" value="false" />
@@ -379,6 +416,7 @@
     <inspection_tool class="OptionalAssignedToNull" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="OptionalGetWithoutIsPresent" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="OptionalIsPresent" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="OptionalOfNullableMisuseMerged" />
     <inspection_tool class="OptionalToIf" enabled="false" level="INFORMATION" enabled_by_default="false" />
     <inspection_tool class="OptionalUsedAsFieldOrParameterType" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="OverflowingLoopIndex" enabled="false" level="WARNING" enabled_by_default="false" />
@@ -527,7 +565,6 @@
     <inspection_tool class="SortedCollectionWithNonComparableKeys" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="SpringQualifierCopyableLombok" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="StaticInitializerReferencesSubClass" enabled="false" level="WARNING" enabled_by_default="false" />
-    <inspection_tool class="StaticPseudoFunctionalStyleMethod" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="StaticSuite" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="StreamToLoop" enabled="false" level="INFORMATION" enabled_by_default="false" />
     <inspection_tool class="StringBufferReplaceableByString" enabled="false" level="WARNING" enabled_by_default="false" />

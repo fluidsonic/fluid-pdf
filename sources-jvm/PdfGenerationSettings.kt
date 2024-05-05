@@ -2,10 +2,11 @@ package io.fluidsonic.pdf
 
 
 public data class PdfGenerationSettings(
-	val footerHtml: String?,
-	val headerHtml: String?,
+	val encryption: PdfEncryption? = null,
+	val footerHtml: String? = null,
+	val headerHtml: String? = null,
 	val includeBackgrounds: Boolean,
-	val metadata: PdfMetadata?,
+	val metadata: PdfMetadata? = null,
 	val pageMargins: PdfMargins,
 	val pageOrientation: PdfOrientation,
 	val pageSize: PdfSize,
@@ -15,10 +16,7 @@ public data class PdfGenerationSettings(
 	public companion object {
 
 		public val default: PdfGenerationSettings = PdfGenerationSettings(
-			footerHtml = null,
-			headerHtml = null,
 			includeBackgrounds = true,
-			metadata = null,
 			pageMargins = PdfMargins.cm(all = 1.0),
 			pageOrientation = PdfOrientation.portrait,
 			pageSize = PdfSize.A4,
