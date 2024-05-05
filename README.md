@@ -16,7 +16,7 @@ Installation
 
 ```kotlin
 dependencies {
-	implementation("io.fluidsonic.pdf:fluid-pdf:0.19.0")
+	implementation("io.fluidsonic.pdf:fluid-pdf:0.20.0")
 }
 ```
 
