@@ -3,6 +3,7 @@ package io.fluidsonic.pdf
 import com.github.kklisura.cdt.launch.*
 import com.github.kklisura.cdt.launch.config.*
 import com.github.kklisura.cdt.launch.support.impl.*
+import com.github.kklisura.cdt.services.impl.*
 import java.io.*
 import java.nio.file.*
 import kotlinx.coroutines.*
@@ -83,6 +84,14 @@ public interface ChromiumPdfGenerator : PdfGenerator, Closeable {
 				dispatcher = dispatcher,
 			)
 		}
+
+
+		internal fun remote(
+			host: String,
+			port: Int,
+			dispatcher: CoroutineDispatcher = Dispatchers.IO,
+		): ChromiumPdfGenerator =
+			DefaultChromiumPdfGenerator(dispatcher = dispatcher, launcher = null, service = ChromeServiceImpl(host, port))
 	}
 
 

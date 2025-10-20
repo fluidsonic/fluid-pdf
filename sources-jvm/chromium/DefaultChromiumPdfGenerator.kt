@@ -16,7 +16,7 @@ import org.apache.pdfbox.pdmodel.encryption.*
 
 internal class DefaultChromiumPdfGenerator(
 	private val dispatcher: CoroutineDispatcher,
-	private val launcher: ChromeLauncher,
+	private val launcher: ChromeLauncher?,
 	private val service: ChromeService,
 ) : ChromiumPdfGenerator {
 
@@ -32,7 +32,7 @@ internal class DefaultChromiumPdfGenerator(
 
 			isClosed = true
 
-			launcher.close()
+			launcher?.close()
 		}
 	}
 
