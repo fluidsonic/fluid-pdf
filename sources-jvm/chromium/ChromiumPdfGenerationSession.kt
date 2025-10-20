@@ -219,7 +219,7 @@ internal fun chromiumRemoteSession(
 	port: Int,
 ): ChromiumPdfGenerationSession {
 	val address = try {
-		InetAddress.getAllByName(host).firstOrNull()?.toString()
+		InetAddress.getAllByName(host).first().hostAddress
 	}
 	catch (e: UnknownHostException) {
 		throw Exception("Cannot resolve Chrome DevTools host '$host'.", e)
@@ -227,9 +227,13 @@ internal fun chromiumRemoteSession(
 
 	return ChromiumPdfGenerationSession(
 		end = {},
-		service = ChromeServiceImpl(address, port),
+		service = ChromeServiceImpl(encodeHostForUrl(address), port),
 	)
 }
+
+
+private fun encodeHostForUrl(host: String) =
+	if (':' in host && !host.startsWith('[') && !host.endsWith(']')) "[$host]" else host
 
 
 private object ChromiumEnvironment : ChromeLauncher.Environment {
