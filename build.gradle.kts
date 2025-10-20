@@ -1,10 +1,10 @@
 import io.fluidsonic.gradle.*
 
 plugins {
-	id("io.fluidsonic.gradle") version "2.0.1"
+	id("io.fluidsonic.gradle") version "2.0.2"
 }
 
-fluidLibrary(name = "pdf", version = "0.22.0")
+fluidLibrary(name = "pdf", version = "0.23.0")
 
 fluidLibraryModule(description = "Easy PDF generation with HTML & CSS using Chromium or Google Chrome") {
 	noDokka()

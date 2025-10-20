@@ -8,17 +8,20 @@ import kotlinx.coroutines.*
 suspend fun main() = withContext(Dispatchers.Default) {
 	// TODO Change the binary file path to your local Chromium or Google Chrome installation.
 
-	val sourceFile = Path.of("examples/data/example.html").toAbsolutePath()
-	val destinationFile = Path.of("examples/data/example.pdf").toAbsolutePath()
+	val sourceFile = Path.of("./data/example.html").toAbsolutePath()
+	val destinationFile = Path.of("./data/example.pdf").toAbsolutePath()
 
 	withContext(Dispatchers.IO) {
 		destinationFile.deleteIfExists()
 	}
 
-	ChromiumPdfGenerator.launch(
-		binaryFile = Path.of("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
-	).use { generator ->
-		generator.generate(
+	val service = PdfGenerationService.chromiumBinary(
+		path = Path.of("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
+	)
+	service.start()
+
+	try {
+		service.generator.generate(
 			source = PdfGenerationSource.HtmlFile(sourceFile),
 			settings = PdfGenerationSettings.default.copy(
 				encryption = PdfEncryption(
@@ -43,6 +46,9 @@ suspend fun main() = withContext(Dispatchers.Default) {
 				)
 			)
 		).writeTo(destinationFile)
+	}
+	finally {
+		service.stop()
 	}
 
 	println()
