@@ -86,7 +86,7 @@ public interface ChromiumPdfGenerator : PdfGenerator, Closeable {
 		}
 
 
-		internal fun remote(
+		public fun remote(
 			host: String,
 			port: Int,
 			dispatcher: CoroutineDispatcher = Dispatchers.IO,
