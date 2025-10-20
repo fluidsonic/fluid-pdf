@@ -1,7 +1,7 @@
 import io.fluidsonic.gradle.*
 
 plugins {
-	id("io.fluidsonic.gradle") version "2.0.0"
+	id("io.fluidsonic.gradle") version "2.0.1"
 }
 
 fluidLibrary(name = "pdf", version = "0.22.0")
