@@ -9,8 +9,9 @@ import com.github.kklisura.cdt.services.impl.*
 import java.io.*
 import java.net.*
 import java.nio.file.*
-import java.util.*
 import kotlin.coroutines.*
+import kotlin.io.encoding.*
+import kotlin.io.path.*
 import kotlinx.coroutines.*
 import org.apache.pdfbox.*
 import org.apache.pdfbox.cos.*
@@ -24,44 +25,28 @@ internal data class ChromiumPdfGenerationSession(
 ) {
 
 	suspend fun generate(input: PdfGenerationInput): PdfGenerationOutput =
-		when (val source = input.source) {
-			is PdfGenerationSource.Html ->
-				withTemporaryHtmlFile { sourceFile ->
-					sourceFile.toFile().writeText(source.source, charset = source.charset)
+		generate(
+			source = when (val source = input.source) {
+				is PdfGenerationSource.Html ->
+					source.code
 
-					generate(sourceFile = sourceFile, settings = input.settings)
-				}
+				is PdfGenerationSource.HtmlFile ->
+					source.file.readText()
 
-			is PdfGenerationSource.HtmlFile -> {
-				val sourceFile = source.file
-
-				require(sourceFile.isAbsolute) { "'sourceFile' must be absolute: $sourceFile" }
-				require(Files.exists(sourceFile)) { "'sourceFile' does not exist: $sourceFile" }
-				require(Files.isReadable(sourceFile)) { "'sourceFile' is not readable: $sourceFile" }
-				require(Files.isRegularFile(sourceFile)) { "'sourceFile' is not a regular file: $sourceFile" }
-				require(Files.size(sourceFile) > 0L) { "'sourceFile' must not be empty: $sourceFile" }
-
-				generate(sourceFile = source.file, settings = input.settings)
-			}
-
-			is PdfGenerationSource.HtmlStream ->
-				withTemporaryHtmlFile { sourceFile ->
-					sourceFile.toFile().outputStream().use { outputStream ->
-						source.stream.copyTo(outputStream)
-					}
-
-					generate(sourceFile = sourceFile, settings = input.settings)
-				}
-		}
+				is PdfGenerationSource.HtmlStream ->
+					source.stream.readBytes().decodeToString()
+			},
+			settings = input.settings,
+		)
 
 
-	private suspend fun generate(sourceFile: Path, settings: PdfGenerationSettings): PdfGenerationOutput {
+	private suspend fun generate(source: String, settings: PdfGenerationSettings): PdfGenerationOutput {
 		val tab = service.createTab()
 		val result = try {
 			service.createDevToolsService(tab).use { devToolsService ->
 				val page = devToolsService.page
 				page.enable()
-				page.navigate(sourceFile.toUri().toString())
+				page.setDocumentContent(page.frameTree.frame.id, source)
 
 				suspendCancellableCoroutine { continuation ->
 					val listener = page.onLoadEventFired { continuation.resume(Unit) }
@@ -96,7 +81,7 @@ internal data class ChromiumPdfGenerationSession(
 			service.closeTab(tab)
 		}
 
-		var outputData = Base64.getDecoder().wrap(result.data.byteInputStream(Charsets.US_ASCII)).readBytes()
+		var outputData = Base64.decode(result.data.toByteArray())
 
 		val encryption = settings.encryption
 		val metadata = settings.metadata

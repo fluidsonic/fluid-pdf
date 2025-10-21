@@ -1,6 +1,7 @@
 import io.fluidsonic.pdf.*
 import java.nio.file.*
 import java.time.*
+import kotlin.io.encoding.*
 import kotlin.io.path.*
 import kotlinx.coroutines.*
 
@@ -8,7 +9,6 @@ import kotlinx.coroutines.*
 suspend fun main() = withContext(Dispatchers.Default) {
 	// TODO Change the binary file path to your local Chromium or Google Chrome installation.
 
-	val sourceFile = Path.of("./data/example.html").toAbsolutePath()
 	val destinationFile = Path.of("./data/example.pdf").toAbsolutePath()
 
 	withContext(Dispatchers.IO) {
@@ -22,7 +22,7 @@ suspend fun main() = withContext(Dispatchers.Default) {
 
 	try {
 		service.generator.generate(
-			source = PdfGenerationSource.HtmlFile(sourceFile),
+			source = PdfGenerationSource.Html(html),
 			settings = PdfGenerationSettings.default.copy(
 				encryption = PdfEncryption(
 					ownerPassword = "secret",
@@ -54,3 +54,13 @@ suspend fun main() = withContext(Dispatchers.Default) {
 	println()
 	println("PDF has been generated at $destinationFile")
 }
+
+
+private val squirrel = Path("./data/squirrel.svg")
+	.readBytes()
+	.let(Base64::encode)
+	.let { "data:image/svg+xml;base64,$it" }
+
+private val html = Path("./data/example.html")
+	.readText()
+	.replace("squirrel.svg", squirrel)
