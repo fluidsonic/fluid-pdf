@@ -3,48 +3,44 @@ package io.fluidsonic.pdf
 import com.github.kklisura.cdt.launch.config.*
 import java.nio.file.*
 import kotlinx.coroutines.*
+import org.slf4j.*
 
 
-public interface PdfGenerationService {
+public interface PdfGeneratorService : PdfGenerator {
 
-	public val generator: PdfGenerator
-
-	public suspend fun start()
+	public suspend fun startIn(scope: CoroutineScope)
 	public suspend fun stop()
 
 
 	public companion object {
 
-		public fun chromiumBinary(
+		public fun chromiumLauncher(
 			path: Path,
-			dispatcher: CoroutineDispatcher = Dispatchers.Default,
+			logger: Logger = DefaultLogger,
 			configure: ChromiumBinaryConfigurationBuilder.() -> Unit = {},
-		): PdfGenerationService {
+		): PdfGeneratorService {
 			val builder = ChromiumBinaryConfigurationBuilder().apply(configure)
 
-			return ChromiumPdfGenerationService(
-				beginSession = {
-					chromiumBinarySession(
-						arguments = builder.buildArguments(),
-						configuration = builder.build(),
-						path = path,
-					)
-				},
-				dispatcher = dispatcher,
+			return ChromiumLaunchingPdfGeneratorService(
+				arguments = builder.buildArguments(),
+				configuration = builder.build(),
+				logger = logger,
+				path = path,
 			)
 		}
 
 
-		public fun chromiumRemote(
+		public fun devTools(
 			host: String,
 			port: Int,
-			dispatcher: CoroutineDispatcher = Dispatchers.Default,
-		): PdfGenerationService =
-			ChromiumPdfGenerationService(
-				beginSession = {
-					chromiumRemoteSession(host = host, port = port)
-				},
-				dispatcher = dispatcher,
+			logger: Logger = DefaultLogger,
+			fakeLocalhost: Boolean = !DevToolsUrlMapper.isAllowedHost(host),
+		): PdfGeneratorService =
+			DevToolsPdfGeneratorService(
+				fakeLocalhost = fakeLocalhost,
+				host = host,
+				logger = logger,
+				port = port
 			)
 	}
 

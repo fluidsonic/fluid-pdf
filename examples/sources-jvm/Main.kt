@@ -15,13 +15,13 @@ suspend fun main() = withContext(Dispatchers.Default) {
 		destinationFile.deleteIfExists()
 	}
 
-	val service = PdfGenerationService.chromiumBinary(
+	val service = PdfGeneratorService.chromiumLauncher(
 		path = Path.of("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
 	)
-	service.start()
+	service.startIn(this)
 
 	try {
-		service.generator.generate(
+		service.generate(
 			source = PdfGenerationSource.Html(html),
 			settings = PdfGenerationSettings.default.copy(
 				encryption = PdfEncryption(

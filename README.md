@@ -2,7 +2,7 @@ fluid-pdf
 =========
 
 [![Maven Central](https://img.shields.io/maven-central/v/io.fluidsonic.pdf/fluid-pdf?label=Maven%20Central)](https://search.maven.org/artifact/io.fluidsonic.pdf/fluid-pdf)
-[![Kotlin](https://img.shields.io/badge/Kotlin-1.8.22-blue.svg)](https://github.com/JetBrains/kotlin/releases/v1.8.22)
+[![Kotlin](https://img.shields.io/badge/Kotlin-2.20.0-blue.svg)](https://github.com/JetBrains/kotlin/releases/v1.8.22)
 [![#fluid-libraries Slack Channel](https://img.shields.io/badge/slack-%23fluid--libraries-543951.svg)](https://kotlinlang.slack.com/messages/C7UDFSVT2/)
 
 Easy PDF generation with HTML & CSS using Chromium or Google Chrome
@@ -16,7 +16,7 @@ Installation
 
 ```kotlin
 dependencies {
-	implementation("io.fluidsonic.pdf:fluid-pdf:0.20.0")
+	implementation("io.fluidsonic.pdf:fluid-pdf:0.30.0")
 }
 ```
 
@@ -36,31 +36,41 @@ suspend fun main() {
 	val sourceFile = Path.of("input.html").toAbsolutePath()
 	val destinationFile = Path.of("output.pdf").toAbsolutePath()
 
-	ChromiumPdfGenerator.launch(
-		binaryFile = Path.of("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
-	).use { generator ->
-		generator.generate(PdfGenerationSource.HtmlFile(sourceFile))
-			.writeTo(destinationFile)
+	coroutineScope {
+		val service = PdfGeneratorService.chromiumLauncher(
+			path = Path.of("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
+		)
+		service.startIn(this)
+
+		try {
+			service.generate(PdfGenerationSource.HtmlFile(sourceFile))
+				.writeTo(destinationFile)
+		}
+		finally {
+			service.stop()
+		}
 	}
 
 	println("PDF has been generated at $destinationFile")
 }
 ```
 
-- Use `ChromiumPdfGenerator.launch()` to launch a browser instance for PDF generation.
-- Use `ChromiumPdfGenerator.lazy()` to launch the browser not immediately but automatically with the first PDF generation.
-- Use `ChromiumPdfGenerator`'s `.close()` to shut down the browser when you are done generating PDFs.
-- Use `PdfGenerator`'s `.generate()` to create any number of PDFs.
-- Use `PdfGenerator` interface to hide implementation details (use of Chromium, `.close()`) as needed.
+- Use `PdfGeneratorService.chromiumLauncher()` to launch a browser instance.
+- Use `PdfGeneratorService.devTools()` to connect to an existing or a remote browser instance.
+- Use `service.startIn(CoroutineScope)` and `service.stop()` to manage the service lifecycle.
+- Use `PdfGeneratorService.generate()` to create any number of PDFs.
+- Use `PdfGenerator` interface to hide service details, e.g. in dependency injection.
 
 ## HTML string to PDF file
 
 ```kotlin
-generator.generate(PdfGenerationSource.Html("<strong>Hello world!</strong>"))
+service.generate(PdfGenerationSource.Html("<strong>Hello world!</strong>"))
 	.writeTo(PdfGenerationDestination.File(destinationFile))
 ```
 
 💡 Relative paths in HTML & CSS won't resolve. Using `<base href="…">` to specify the base path should help.
+
+**Paths in HTML & CSS only work with a Chromium instance on the same machine.**
 
 ## HTML stream to PDF file
 
@@ -73,10 +83,12 @@ generator.generate(PdfGenerationSource.HtmlStream(sourceStream))
 
 💡 Relative paths in HTML & CSS won't resolve. Using `<base href="…">` to specify the base path should help.
 
+**Paths in HTML & CSS only work with a Chromium instance on the same machine.**
+
 ## PDF generation settings
 
 ```kotlin
-generator.generate(
+service.generate(
 	source = PdfGenerationSource.Html("<strong>Hello world!</strong>"),
 	settings = PdfGenerationSettings.default.copy(
 		encryption = PdfEncryption(
@@ -103,7 +115,7 @@ generator.generate(
 ## Output to stream
 
 ```kotlin
-generator.generate(PdfGenerationSource.Html("<strong>Hello world!</strong>"))
+service.generate(PdfGenerationSource.Html("<strong>Hello world!</strong>"))
 	.writeTo(outputStream)
 ```
 
@@ -113,12 +125,13 @@ generator.generate(PdfGenerationSource.Html("<strong>Hello world!</strong>"))
 
 TO-DO
 -----
+
 Contributions welcome 🙏
 
 - Add unit tests.
 - Add KDoc to all public API.
-- Check if `.generate()` works well if used from multiple threads and document if that is the case.
-- Add support for header & footer templates.
+- Write Chromium launcher & DevTools WebSocket client with Kotlin & Ktor, then remove dependency on `com.github.kklisura.cdt`.
+- Test if `.generate()` works well with significant parallelism.
 
 License
 -------

@@ -54,9 +54,6 @@
       <option name="SPACES_AROUND_KEY_VALUE_DELIMITER" value="true" />
       <option name="KEEP_BLANK_LINES" value="true" />
     </Properties>
-    <XML>
-      <option name="XML_LEGACY_SETTINGS_IMPORTED" value="true" />
-    </XML>
     <codeStyleSettings language="JAVA">
       <option name="ELSE_ON_NEW_LINE" value="true" />
       <option name="WHILE_ON_NEW_LINE" value="true" />
