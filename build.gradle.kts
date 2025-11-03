@@ -5,7 +5,7 @@ plugins {
 	kotlin("plugin.serialization") version "2.2.20"
 }
 
-fluidLibrary(name = "pdf", version = "0.30.0")
+fluidLibrary(name = "pdf", version = "0.31.0")
 
 fluidLibraryModule(description = "Easy PDF generation with HTML & CSS using Chromium or Google Chrome") {
 	noDokka()
