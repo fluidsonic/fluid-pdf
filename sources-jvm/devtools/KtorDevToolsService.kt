@@ -76,7 +76,7 @@ internal class KtorDevToolsService(
 
 
 	override suspend fun newTab(url: String): BrowserTab =
-		request<BrowserTab>("new", url)
+		request<BrowserTab>("new", query = url)
 			.let { urlMapper?.map(it) ?: it }
 
 
@@ -86,13 +86,13 @@ internal class KtorDevToolsService(
 
 
 	private suspend inline fun <reified Result> request(
-		path: String,
+		vararg path: String,
 		query: String? = null,
 	): Result =
 		client
 			.put {
 				url {
-					appendPathSegments("json", path)
+					appendPathSegments("json", *path)
 					if (query != null) encodedParameters.appendAll(query, emptyList())
 				}
 			}
