@@ -14,3 +14,4 @@
 .gradle
 build
 out
+.claude/worktrees/
