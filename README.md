@@ -2,7 +2,8 @@ fluid-pdf
 =========
 
 [![Maven Central](https://img.shields.io/maven-central/v/io.fluidsonic.pdf/fluid-pdf?label=Maven%20Central)](https://search.maven.org/artifact/io.fluidsonic.pdf/fluid-pdf)
-[![Kotlin](https://img.shields.io/badge/Kotlin-2.20.0-blue.svg)](https://github.com/JetBrains/kotlin/releases/v1.8.22)
+[![Kotlin](https://img.shields.io/badge/Kotlin-2.3.20%20(JVM)-blue.svg)](https://github.com/JetBrains/kotlin/releases/v2.3.20)
+[![Tests](https://github.com/fluidsonic/fluid-pdf/workflows/Tests/badge.svg)](https://github.com/fluidsonic/fluid-pdf/actions?workflow=Tests)
 [![#fluid-libraries Slack Channel](https://img.shields.io/badge/slack-%23fluid--libraries-543951.svg)](https://kotlinlang.slack.com/messages/C7UDFSVT2/)
 
 Easy PDF generation with HTML & CSS using Chromium or Google Chrome
@@ -16,7 +17,7 @@ Installation
 
 ```kotlin
 dependencies {
-	implementation("io.fluidsonic.pdf:fluid-pdf:0.30.0")
+	implementation("io.fluidsonic.pdf:fluid-pdf:0.32.0")
 }
 ```
 
@@ -128,8 +129,6 @@ TO-DO
 
 Contributions welcome 🙏
 
-- Add unit tests.
-- Add KDoc to all public API.
 - Write Chromium launcher & DevTools WebSocket client with Kotlin & Ktor, then remove dependency on `com.github.kklisura.cdt`.
 - Test if `.generate()` works well with significant parallelism.
 

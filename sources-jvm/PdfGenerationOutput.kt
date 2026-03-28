@@ -5,15 +5,23 @@ import java.nio.file.*
 import kotlinx.coroutines.*
 
 
+/** The output of a PDF generation, providing access to the generated PDF data. */
 public interface PdfGenerationOutput {
 
+	/** Returns the generated PDF as a byte array. */
 	public suspend fun toByteArray(dispatcher: CoroutineDispatcher = Dispatchers.IO): ByteArray
+
+	/** Writes the generated PDF to the given [output] stream. */
 	public suspend fun writeTo(output: OutputStream, dispatcher: CoroutineDispatcher = Dispatchers.IO)
+
+	/** Writes the generated PDF to the given [file]. */
 	public suspend fun writeTo(file: Path, vararg options: OpenOption, dispatcher: CoroutineDispatcher = Dispatchers.IO)
 
 
+	/** Factory methods for creating [PdfGenerationOutput] instances. */
 	public companion object {
 
+		/** Creates an output backed by the given byte array [data]. */
 		public fun withByteArray(data: ByteArray): PdfGenerationOutput =
 			WithByteArray(data = data)
 	}

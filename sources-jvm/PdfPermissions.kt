@@ -85,6 +85,7 @@ public data class PdfPermissions(
 	}
 
 
+	/** Predefined [PdfPermissions] instances. */
 	public companion object {
 
 		/** All configurable permissions are given. */

@@ -23,9 +23,9 @@ internal abstract class AbstractPdfGeneratorService<Instance> : PdfGeneratorServ
 						generateWithInstance(state.instance, input)
 					}
 
-				State.Stopped -> error("generate() called while service is stopped. Call startIn() first.")
-				State.Starting -> error("generate() not allowed while service is starting.")
-				State.Stopping -> error("generate() not allowed while service is stopping.")
+				State.Stopped -> fail("generate() called while service is stopped. Call startIn() first.")
+				State.Starting -> fail("generate() not allowed while service is starting.")
+				State.Stopping -> fail("generate() not allowed while service is stopping.")
 			}
 		}.await()
 
@@ -33,10 +33,10 @@ internal abstract class AbstractPdfGeneratorService<Instance> : PdfGeneratorServ
 	final override suspend fun startIn(scope: CoroutineScope) {
 		stateMutex.withLock {
 			when (state) {
-				is State.Started -> error("startIn() called while already started.")
-				State.Starting -> error("startIn() already in progress.")
+				is State.Started -> check(false) { "startIn() called while already started." }
+				State.Starting -> check(false) { "startIn() already in progress." }
 				State.Stopped -> state = State.Starting
-				State.Stopping -> error("startIn() not allowed while stopping; wait for stop() to finish.")
+				State.Stopping -> check(false) { "startIn() not allowed while stopping; wait for stop() to finish." }
 			}
 		}
 
@@ -88,9 +88,9 @@ internal abstract class AbstractPdfGeneratorService<Instance> : PdfGeneratorServ
 					state
 				}
 
-				State.Starting -> error("stop() not allowed while starting; try again after startIn() completes.")
-				State.Stopped -> error("stop() called while already stopped.")
-				State.Stopping -> error("stop() already in progress.")
+				State.Starting -> fail("stop() not allowed while starting; try again after startIn() completes.")
+				State.Stopped -> fail("stop() called while already stopped.")
+				State.Stopping -> fail("stop() already in progress.")
 			}
 		}
 
@@ -134,4 +134,11 @@ internal abstract class AbstractPdfGeneratorService<Instance> : PdfGeneratorServ
 		data object Stopped : State<Nothing>
 		data object Stopping : State<Nothing>
 	}
+}
+
+
+@Suppress("UNREACHABLE_CODE")
+private fun fail(message: String): Nothing {
+	check(false) { message }
+	error("unreachable")
 }
