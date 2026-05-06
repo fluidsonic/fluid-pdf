@@ -5,7 +5,7 @@ plugins {
 	kotlin("plugin.serialization") version "2.3.20"
 }
 
-fluidLibrary(name = "pdf", version = "0.32.0")
+fluidLibrary(name = "pdf", version = "0.32.1")
 
 fluidLibraryModule(description = "Easy PDF generation with HTML & CSS using Chromium or Google Chrome") {
 	targets {
