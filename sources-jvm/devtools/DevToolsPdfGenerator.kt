@@ -30,14 +30,35 @@ internal class DevToolsPdfGenerator(
 
 
 	private suspend fun generate(source: String, settings: PdfGenerationSettings): PdfGenerationOutput {
+		logger.debug("Creating new tab.")
 		val tab = discovery.newTab()
+		logger.debug("Tab created: {}", tab.id)
+
+		logger.debug("Opening DevTools connection.")
 		val connection = discovery.debugTab(tab.websocketDebuggerUrl)
+		logger.debug("DevTools connection opened.")
+
 		val result = try {
 			val page = connection.page
+
+			logger.debug("Enabling page protocol.")
 			page.enable()
-			page.setDocumentContent(page.getFrameTree().frame.id, source)
+			logger.debug("Page protocol enabled.")
+
+			logger.debug("Fetching frame tree.")
+			val frameId = page.getFrameTree().frame.id
+			logger.debug("Frame tree fetched: {}", frameId)
+
+			logger.debug("Setting document content ({} chars).", source.length)
+			page.setDocumentContent(frameId, source)
+			logger.debug("Document content set.")
+
+			logger.debug("Waiting for load event.")
 			page.loadEventFired().first()
-			page.printToPdf(
+			logger.debug("Load event received.")
+
+			logger.debug("Calling printToPdf.")
+			val printToPdfResult = page.printToPdf(
 				landscape = when (settings.pageOrientation) {
 					PdfOrientation.landscape -> true
 					PdfOrientation.portrait -> false
@@ -58,17 +79,23 @@ internal class DevToolsPdfGenerator(
 				preferCSSPageSize = settings.preferCssPageSize,
 				transferMode = PrintToPDFTransferMode.RETURN_AS_BASE_64,
 			)
+			logger.debug("printToPdf returned ({} chars base64).", printToPdfResult.data.length)
+			printToPdfResult
 		}
 		finally {
+			logger.debug("Closing DevTools connection.")
 			try {
 				connection.close()
+				logger.debug("DevTools connection closed.")
 			}
 			catch (e: Throwable) {
 				logger.error("Cannot close DevTools connection.", e)
 			}
 
+			logger.debug("Closing tab {}.", tab.id)
 			try {
 				discovery.closeTab(tab.id)
+				logger.debug("Tab {} closed.", tab.id)
 			}
 			catch (e: Throwable) {
 				logger.error("Cannot close tab.", e)
