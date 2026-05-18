@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 
+## [0.32.1] - 2026-05-18
+
+### Added
+
+- Debug logging at each CDP step in `DevToolsPdfGenerator`.
+
+
 ## [0.32.0] - 2026-03-28
 
 ### Added
